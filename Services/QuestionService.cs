@@ -12,14 +12,16 @@ namespace QuizEnlab.Services
         private readonly IQuestionRepository _questionRepository;
         private readonly IQuizRepository _quizRepository;
         private readonly IUserAnswerRepository _userAnswerRepository;
+        private readonly IAnswerRepository _answerRepository;
         private readonly IMapper _mapper;
 
-        public QuestionService(IQuestionRepository questionRepository, IQuizRepository quizRepository, IUserAnswerRepository userAnswerRepository, IMapper mapper)
+        public QuestionService(IQuestionRepository questionRepository, IQuizRepository quizRepository, IUserAnswerRepository userAnswerRepository, IMapper mapper, IAnswerRepository answerRepository)
         {
             _questionRepository = questionRepository;
             _quizRepository = quizRepository;
             _userAnswerRepository = userAnswerRepository;
             _mapper = mapper;
+            _answerRepository = answerRepository;
         }
         public async Task<QuestionModel?> GetFirstQuestionAsync(int quizId)
         {
@@ -35,10 +37,16 @@ namespace QuizEnlab.Services
             {
                 return null;
             }
+            var answers = await _answerRepository.GetAnswersByQuestionAsync(question.Id);
             var questionModel = new QuestionModel
             {
                 IdQuiz = quiz.Id,
-                QuestionAnswer = question
+                QuestionAnswer = new QAViewModel
+                {
+                    Id = question.Id,
+                    Text = question.Text,
+                    Answers = _mapper.Map<List<AnswerModel>>(answers)
+                }
             };
             return questionModel;
         }
@@ -71,10 +79,16 @@ namespace QuizEnlab.Services
                 nextQuestionResult.ResultModel = _mapper.Map<ResultModel>(quizResult);
                 return nextQuestionResult;
             }
+            var answers = await _answerRepository.GetAnswersByQuestionAsync(question.Id);
             nextQuestionResult.Question = new QuestionModel
             {
                 IdQuiz = quiz.Id,
-                QuestionAnswer = question
+                QuestionAnswer = new QAViewModel
+                {
+                    Id = question.Id,
+                    Text = question.Text,
+                    Answers = _mapper.Map<List<AnswerModel>>(answers)
+                }
             };
             return nextQuestionResult;
         }

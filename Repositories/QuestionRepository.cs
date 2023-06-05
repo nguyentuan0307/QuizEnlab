@@ -15,7 +15,7 @@ namespace QuizEnlab.Repositories
             _dataContext = dataContext;
         }
 
-        public async Task<QAViewModel?> GetRandomQuestionAsync()
+        public async Task<Question?> GetRandomQuestionAsync()
         {
             var question = await _dataContext.Questions.Include(q => q.Answers)
                 .OrderBy(q => Guid.NewGuid())
@@ -24,10 +24,10 @@ namespace QuizEnlab.Repositories
             {
                 return null;
             }
-            return ConvertToQAView(question);
+            return question;
         }
 
-        public async Task<QAViewModel?> GetRandomQuestionExcludingAsync(HashSet<int> usedQuestionIds)
+        public async Task<Question?> GetRandomQuestionExcludingAsync(HashSet<int> usedQuestionIds)
         {
             var question = await _dataContext.Questions
                 .Include(q => q.Answers)
@@ -40,22 +40,7 @@ namespace QuizEnlab.Repositories
                 return null;
             }
 
-            return ConvertToQAView(question);
-        }
-        private static QAViewModel ConvertToQAView(Question question)
-        {
-            var qaView = new QAViewModel
-            {
-                Id = question.Id,
-                Text = question.Text,
-                Answers = question.Answers.ToList().Select(a => new AnswerModel
-                {
-                    Id = a.Id,
-                    Text = a.Text
-                }).ToList()
-            };
-
-            return qaView;
+            return question;
         }
 
         public async Task<int?> GetIdQuestionByIdAnswerAsync(int answerId)

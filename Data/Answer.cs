@@ -15,6 +15,6 @@ namespace QuizEnlab.Data
         public bool IsCorrect { get; set; }
         public int QuestionId { get; set; }
         public Question Question { get; set; }
-        public HashSet<UserAnswer> UserAnswers { get; set; }
+        public ICollection<UserAnswer> UserAnswers { get; set; }
     }
 }

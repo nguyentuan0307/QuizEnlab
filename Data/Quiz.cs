@@ -15,6 +15,6 @@ namespace QuizEnlab.Data
         public DateTime EndTime { get; set; }
         public int UserAnswersCountCorrect { get; set; }
         public int UserAnswersCount { get; set; }
-        public HashSet<UserAnswer> UserAnswers { get; set; }
+        public ICollection<UserAnswer> UserAnswers { get; set; }
     }
 }

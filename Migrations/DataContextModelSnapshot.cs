@@ -44,7 +44,7 @@ namespace QuizEnlab.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answer");
+                    b.ToTable("Answer", (string)null);
 
                     b.HasData(
                         new
@@ -343,7 +343,7 @@ namespace QuizEnlab.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Question");
+                    b.ToTable("Question", (string)null);
 
                     b.HasData(
                         new
@@ -420,7 +420,7 @@ namespace QuizEnlab.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Quiz");
+                    b.ToTable("Quiz", (string)null);
                 });
 
             modelBuilder.Entity("QuizEnlab.Data.UserAnswer", b =>
@@ -443,7 +443,7 @@ namespace QuizEnlab.Migrations
 
                     b.HasIndex("QuizId");
 
-                    b.ToTable("UserAnswer");
+                    b.ToTable("UserAnswer", (string)null);
                 });
 
             modelBuilder.Entity("QuizEnlab.Data.Answer", b =>

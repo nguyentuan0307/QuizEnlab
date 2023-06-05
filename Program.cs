@@ -1,25 +1,40 @@
 using Microsoft.EntityFrameworkCore;
 using QuizEnlab.Data;
+using QuizEnlab.Repositories;
+using QuizEnlab.Repositories.IRepository;
+using QuizEnlab.Services;
+using QuizEnlab.Services.IServices;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var services = builder.Services;
 // Add services to the container.
 
-builder.Services.AddControllers();
+services.AddControllers();
+services.AddMemoryCache();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen(options =>
+{
+    options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+});
 
-builder.Services.AddCors(opt => opt.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+services.AddCors(opt => opt.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
-builder.Services.AddDbContext<DataContext>(opt =>
+services.AddDbContext<DataContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("defaults"));
 });
 
-builder.Services.AddAutoMapper(typeof(Program));
-
-
+services.AddAutoMapper(typeof(Program));
+services.AddScoped<IQuestionRepository, QuestionRepository>();
+services.AddScoped<IQuestionService, QuestionService>();
+services.AddScoped<IAnswerRepository, AnswerRepository>();
+services.AddScoped<IAnswerService, AnswerService>();
+services.AddScoped<IQuizRepository, QuizRepository>();
+services.AddScoped<IQuizService, QuizService>();
+services.AddScoped<IUserAnswerRepository, UserAnswerRepository>();
+services.AddScoped<IUserAnswerService, UserAnswerService>();
 
 var app = builder.Build();
 

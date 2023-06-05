@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using QuizEnlab.Model;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QuizEnlab.Data
@@ -12,6 +13,12 @@ namespace QuizEnlab.Data
         }
         public int Id { get; set; }
         public string Text { get; set; }
-        public HashSet<Answer> Answers { get; set; }
+        public ICollection<Answer> Answers { get; set; }
+
+        public static implicit operator Question(QAViewModel v)
+        {
+            throw new NotImplementedException();
+        }
     }
+
 }

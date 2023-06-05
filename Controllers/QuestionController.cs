@@ -59,5 +59,27 @@ namespace QuizEnlab.Controllers
             }
             return Ok(questionResult.Question);
         }
+        [HttpGet("GetAllQuestions")]
+        public async Task<ActionResult<QuestionsModel>> GetAllQuestions()
+        {
+            var quiz = await _quizService.CreateQuizAsync();
+            var questions = await _questionService.GetQuestionsAsync(quiz.Id);
+            if (questions == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(questions);
+        }
+        [HttpGet("End")]
+        public async Task<ActionResult<ResultModel>> EndQuiz(int quizId)
+        {
+            var quiz = await _quizService.QuizViewAsync(quizId);
+            if (quiz == null)
+            {
+                return BadRequest();
+            }
+            return Ok(quiz);
+        }
     }
 }

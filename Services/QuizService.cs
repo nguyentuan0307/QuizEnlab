@@ -65,10 +65,10 @@ namespace QuizEnlab.Services
             return result;
         }
 
-        public async Task<ResultModel?> GetQuizAsync(int id)
+        public async Task<ResultModel?> QuizViewAsync(int id)
         {
-            return _mapper.Map<ResultModel>(await _quizRepository.GetQuizByIdAsync(id));
+            var quiz = _mapper.Map<ResultModel>(await _quizRepository.UpdateQuizByIdAsync(id));
+            return quiz;
         }
-
     }
 }

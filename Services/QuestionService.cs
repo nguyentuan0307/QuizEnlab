@@ -14,7 +14,6 @@ namespace QuizEnlab.Services
         private readonly IUserAnswerRepository _userAnswerRepository;
         private readonly IAnswerRepository _answerRepository;
         private readonly IMapper _mapper;
-
         public QuestionService(IQuestionRepository questionRepository, IQuizRepository quizRepository, IUserAnswerRepository userAnswerRepository, IMapper mapper, IAnswerRepository answerRepository)
         {
             _questionRepository = questionRepository;
@@ -91,6 +90,42 @@ namespace QuizEnlab.Services
                 }
             };
             return nextQuestionResult;
+        }
+
+        public async Task<QuestionsModel?> GetQuestionsAsync(int quizId)
+        {
+            var questions = await _questionRepository.GetQuestionsAsync();
+            if (questions == null)
+            {
+
+                return null;
+            }
+
+            var quiz = await _quizRepository.GetQuizByIdAsync(quizId);
+            if (quiz == null)
+            {
+                return null;
+            }
+
+            var questionsModel = new QuestionsModel
+            {
+                IdQuiz = quizId
+            };
+
+            var qaViewModels = new List<QAViewModel>();
+            foreach (var question in questions)
+            {
+                var answers = await _answerRepository.GetAnswersByQuestionAsync(question.Id);
+                var qaViewModel = new QAViewModel
+                {
+                    Id = question.Id,
+                    Text = question.Text,
+                    Answers = _mapper.Map<List<AnswerModel>>(answers)
+                };
+                qaViewModels.Add(qaViewModel);
+            }
+            questionsModel.QuestionsAnswer = qaViewModels;
+            return questionsModel;
         }
     }
 }

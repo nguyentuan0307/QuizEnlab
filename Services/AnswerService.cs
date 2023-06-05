@@ -24,16 +24,16 @@ namespace QuizEnlab.Services
 
             if (questionIdAnswer != questionId)
             {
-                return new BadRequestObjectResult("Invalid question ID"); // Trả về thông báo lỗi
+                return new BadRequestObjectResult("Invalid question ID");
             }
 
             var isCorrect = await _answerRepository.ValidateAnswersAsync(answerModel.Id);
             if (isCorrect == null)
             {
-                return new NotFoundObjectResult("Answer not found"); // Trả về thông báo lỗi
+                return new NotFoundObjectResult("Answer not found");
             }
 
-            return isCorrect; // Trả về giá trị isCorrect
+            return isCorrect;
         }
     }
 }

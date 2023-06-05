@@ -76,5 +76,10 @@ namespace QuizEnlab.Repositories
         {
             return await _dataContext.Questions.FindAsync(id);
         }
+
+        public async Task<List<Question>?> GetQuestionsAsync()
+        {
+            return await _dataContext.Questions.ToListAsync();
+        }
     }
 }

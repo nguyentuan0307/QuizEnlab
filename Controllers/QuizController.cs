@@ -28,5 +28,6 @@ namespace QuizEnlab.Controllers
             var results = await _quizService.GetDetailResult(quizId);
             return Ok(results);
         }
+
     }
 }

@@ -6,5 +6,6 @@ namespace QuizEnlab.Services.IServices
     {
         public Task<QuestionModel?> GetFirstQuestionAsync(int quizId);
         public Task<NextQuestionResult?> GetNextQuestionAsync(int quizId);
+        public Task<QuestionsModel?> GetQuestionsAsync(int quizId);
     }
 }

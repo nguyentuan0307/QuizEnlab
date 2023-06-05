@@ -23,7 +23,7 @@ namespace QuizEnlab.Controllers
         {
             var result = await _answerService.CheckAnswer(questionId, answerModel);
             await _userAnswerService.SaveUserAnswerAsync(quizId, answerModel.Id);
-            return result;
+            return Ok(result);
         }
     }
 }

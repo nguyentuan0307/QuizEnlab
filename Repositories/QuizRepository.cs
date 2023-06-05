@@ -14,6 +14,7 @@ namespace QuizEnlab.Repositories
         }
         public async Task<Quiz?> CreateQuizAsync(Quiz quiz)
         {
+            quiz.StartTime = DateTime.Now;
             await _dataContext.Quizzes.AddAsync(quiz);
             await _dataContext.SaveChangesAsync();
             return quiz;
@@ -46,6 +47,7 @@ namespace QuizEnlab.Repositories
                         .Select(a => a.Answer.QuestionId)
                         .Distinct()
                         .CountAsync();
+                    existingQuiz.IsPassed = (correctAnswerCount >= totalQuestionCount * 0.5);
                     existingQuiz.EndTime = quiz.EndTime;
                     existingQuiz.UserAnswersCountCorrect = correctAnswerCount;
                     existingQuiz.UserAnswersCount = totalQuestionCount;
@@ -53,6 +55,31 @@ namespace QuizEnlab.Repositories
                     await _dataContext.SaveChangesAsync();
                     return existingQuiz;
                 }
+            }
+            return null;
+        }
+
+        public async Task<Quiz?> UpdateQuizByIdAsync(int quizId)
+        {
+
+            var existingQuiz = await _dataContext.Quizzes.FindAsync(quizId);
+            if (existingQuiz != null)
+            {
+                var correctAnswerCount = await _dataContext.UserAnswers
+                    .CountAsync(a => a.QuizId == quizId && a.Answer.IsCorrect);
+
+                var totalQuestionCount = await _dataContext.UserAnswers
+                    .Where(a => a.QuizId == quizId)
+                    .Select(a => a.Answer.QuestionId)
+                    .Distinct()
+                    .CountAsync();
+                existingQuiz.EndTime = DateTime.Now;
+                existingQuiz.IsPassed = (correctAnswerCount >= totalQuestionCount * 0.5);
+                existingQuiz.UserAnswersCountCorrect = correctAnswerCount;
+                existingQuiz.UserAnswersCount = totalQuestionCount;
+
+                await _dataContext.SaveChangesAsync();
+                return existingQuiz;
             }
             return null;
         }
